@@ -52,6 +52,7 @@ const {user} = use(AuthContext)
             }
         }
         console.log(cost);
+        data.cost = cost
         Swal.fire({
             title: "Agree with the cost?",
             text: `You have to pay ${cost} taka`,
@@ -67,7 +68,6 @@ const {user} = use(AuthContext)
                 .then(res=>{
                     console.log(res.data);
                 })
-
 
                 Swal.fire({
                     title: "Confirmed!",
