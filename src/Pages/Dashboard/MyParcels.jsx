@@ -2,10 +2,12 @@ import React, { use } from 'react';
 import { AuthContext } from '../../Context/AuthProvider';
 import { useQuery } from '@tanstack/react-query'
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
-import { CiEdit } from "react-icons/ci";
+import { CiCircleAlert, CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import Swal from 'sweetalert2';
 import { Link } from 'react-router';
+import { IoAlertCircleSharp } from "react-icons/io5";
+
 
 
 const MyParcels = () => {
@@ -52,6 +54,17 @@ const MyParcels = () => {
         });
     }
 
+    const handlePayment = async (parcel) => {
+        const parcelInfo = {
+            cost: parcel.cost,
+            parcelId: parcel._id,
+            senderEmail: parcel.senderEmail,
+            parcelName: parcel.parcelName,
+        }
+        const res = await axiosSecure.post('/create-checkout-session', parcelInfo);
+        window.location.href = res.data.url;
+    }
+
     return (
         <div>
             All of my parcels ({parcels.length})
@@ -63,8 +76,7 @@ const MyParcels = () => {
                             <th></th>
                             <th>Name</th>
                             <th>Cost</th>
-                            <th>Payment </th>
-                            <th>Delivery Status</th>
+                            <th>Payment</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -79,12 +91,9 @@ const MyParcels = () => {
                                         {
                                             parcel.paymentStatus === 'paid'
                                                 ? <span className='text-green-400'>Paid</span>
-                                                : <Link to={`/dashboard/payment/${parcel._id}`}>
-                                                    <button className="btn btn-sm btn-primary text-black">
-                                                        Pay
-                                                    </button>
-                                                </Link>
+                                                : <button onClick={() => handlePayment(parcel)} className="btn btn-primary text-black">Pay</button>
                                         }
+
                                     </td>
                                     <td>{parcel.deliveryStatus}</td>
                                     <td className='space-x-2 space-y-1'>
@@ -94,9 +103,16 @@ const MyParcels = () => {
                                         {/* <button className='btn btn-square hover:bg-primary'>
                                             <CiEdit />
                                         </button> */}
-                                        <button onClick={() => handleParcelDelete(parcel._id)} className='btn btn-square hover:bg-primary'>
+                                        <button onClick={() => handleParcelDelete(parcel._id)} className='btn btn-square hover:bg-red-600'>
                                             <MdDeleteOutline />
                                         </button>
+
+                                        <Link to={`/dashboard/payment/${parcel._id}`}>
+                                            <button className="btn btn-square ">
+                                                <CiCircleAlert />
+                                            </button>
+                                        </Link>
+
                                     </td>
                                 </tr>
                             )

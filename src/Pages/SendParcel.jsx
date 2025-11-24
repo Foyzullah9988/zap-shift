@@ -1,6 +1,6 @@
 import React, { use } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../Hooks/useAxiosSecure';
 import { AuthContext } from '../Context/AuthProvider';
@@ -12,7 +12,8 @@ const SendParcel = () => {
         handleSubmit,
         control
     } = useForm();
-const {user} = use(AuthContext)    
+    const { user } = use(AuthContext);
+    const navigate = useNavigate()
     const axiosSecure = useAxiosSecure();
     const warhorses = useLoaderData();
     // console.log(warhorses);
@@ -60,20 +61,26 @@ const {user} = use(AuthContext)
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, confirm it!"
+            confirmButtonText: "Confirm!"
         }).then((result) => {
             if (result.isConfirmed) {
                 // save the parcel into database
-                axiosSecure.post('/parcels',data)
-                .then(res=>{
-                    console.log(res.data);
-                })
+                axiosSecure.post('/parcels', data)
+                    .then(res => {
+                        console.log(res.data);
+                        if (res.data.insertedId) {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Parcel has created.Please pay",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                        navigate(`/dashboard/my-parcels`)
+                    })
 
-                Swal.fire({
-                    title: "Confirmed!",
-                    text: "Your file has been confirm.",
-                    icon: "success"
-                });
+
             }
         });
     }
