@@ -3,6 +3,7 @@ import React, { use } from 'react';
 import { Navigate, useLocation } from 'react-router';
 // import Spinner from '../Components/Spinner';
 import { AuthContext } from '../Context/AuthProvider';
+import Loading from '../Components/Loading';
 
 const PrivateRoute = ({ children }) => {
     const { user, loading} = use(AuthContext)
@@ -14,7 +15,7 @@ const PrivateRoute = ({ children }) => {
     if (loading) {
         return <div className='min-h-screen flex justify-center items-center'>
             {/* <Spinner /> */}
-            <p>Loading...</p>
+            <Loading/>
         </div>
     }
 

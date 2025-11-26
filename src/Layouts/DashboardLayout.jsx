@@ -3,12 +3,15 @@ import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillProduct } from "react-icons/ai";
 import Navbar from '../Shared/Navbar';
 import Footer from '../Shared/Footer';
-import { PiCreditCardDuotone } from "react-icons/pi";
+import { PiCreditCardDuotone, PiPersonSimpleBike, PiPersonSimpleBikeBold } from "react-icons/pi";
+import { FaUsers } from 'react-icons/fa';
+import useRole from '../Hooks/useRole';
+import { MdElectricBike } from 'react-icons/md';
 
 const DashboardLayout = () => {
+    const { role } = useRole();
     return (
         <div>
-            <Navbar/>
             <div className="drawer lg:drawer-open">
                 <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content">
@@ -21,7 +24,7 @@ const DashboardLayout = () => {
                         <div className="px-4">Zap Shift dashboard</div>
                     </nav>
                     {/* Page content here */}
-                    <Outlet/>
+                    <Outlet />
                 </div>
 
                 <div className="drawer-side is-drawer-close:overflow-visible">
@@ -37,7 +40,7 @@ const DashboardLayout = () => {
                                     <span className="is-drawer-close:hidden">Homepage</span>
                                 </NavLink>
                             </li>
-                            
+
                             <li>
                                 <NavLink to={'/dashboard/my-parcels'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Parcels">
                                     <div className="mt-1.5 inline-block size-4">
@@ -46,7 +49,7 @@ const DashboardLayout = () => {
                                     <span className="is-drawer-close:hidden">My Parcels</span>
                                 </NavLink>
                             </li>
-                            
+
                             <li>
                                 <NavLink to={'/dashboard/payment-history'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Payment History">
                                     <div className="mt-1.5 inline-block size-4">
@@ -55,6 +58,37 @@ const DashboardLayout = () => {
                                     <span className="is-drawer-close:hidden">Payment History</span>
                                 </NavLink>
                             </li>
+
+                            {
+                                role === 'admin'
+                                &&
+                                <>
+                                    <li>
+                                        <NavLink to={'/dashboard/approve-riders'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Approve Riders">
+                                            <div className="mt-1.5 inline-block size-4">
+                                                <PiPersonSimpleBikeBold />
+                                            </div>
+                                            <span className="is-drawer-close:hidden">Approve Riders</span>
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to={'/dashboard/assign-riders'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Assign Riders">
+                                            <div className="mt-1.5 inline-block size-4">
+                                                <MdElectricBike />
+                                            </div>
+                                            <span className="is-drawer-close:hidden">Assign Riders</span>
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to={'/dashboard/users-management'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Users Management">
+                                            <div className="mt-1.5 inline-block size-4">
+                                                <FaUsers />
+                                            </div>
+                                            <span className="is-drawer-close:hidden">Users Management</span>
+                                        </NavLink>
+                                    </li>
+                                </>
+                            }
 
                             {/* List item */}
                             <li>
@@ -68,7 +102,7 @@ const DashboardLayout = () => {
                     </div>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 };

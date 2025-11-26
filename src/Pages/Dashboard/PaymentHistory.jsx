@@ -13,6 +13,7 @@ const PaymentHistory = () => {
             return res.data;
         }
     })
+    console.log(payments);
 
     return (
         <div>
@@ -25,7 +26,9 @@ const PaymentHistory = () => {
                             <th></th>
                             <th>Name</th>
                             <th>Amount</th>
+                            <th>Date</th>
                             <th>Transaction Id</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,7 +38,9 @@ const PaymentHistory = () => {
                                     <th>{i+1}</th>
                                     <td>{payment.parcelName}</td>
                                     <td>{payment.amount}tk</td>
+                                    <td>{payment.paidAt}</td>
                                     <td>{payment.transactionId}</td>
+                                    {/* <td>{payment.deliveryStatus}</td> */}
                                 </tr>
                             )
                         }

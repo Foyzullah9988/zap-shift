@@ -2,8 +2,10 @@ import React, { use } from 'react';
 import Logo from '../Components/Logo';
 import { Link, NavLink } from 'react-router';
 import { AuthContext } from '../Context/AuthProvider';
+import useRole from '../Hooks/useRole';
 
 const Navbar = () => {
+    const {role} = useRole()
 
     const {user,logout} = use(AuthContext)
 
@@ -45,6 +47,7 @@ const Navbar = () => {
                 <Logo>
                     <Link to={'/'} className="btn btn-ghost text-xl"></Link>
                 </Logo>
+                <div className='border'>{role}</div>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">

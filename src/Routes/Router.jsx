@@ -14,6 +14,10 @@ import Payment from "../Pages/Dashboard/Payment";
 import PaymentSuccess from "../Pages/Dashboard/PaymentSuccess";
 import PaymentCancel from "../Pages/Dashboard/PaymentCancel";
 import PaymentHistory from "../Pages/Dashboard/PaymentHistory";
+import ApproveRiders from "../Pages/Dashboard/ApproveRiders";
+import UsersManagement from "../Pages/Dashboard/UsersManagement";
+import AdminRoute from "./AdminRoute";
+import AssignRiders from "../Pages/Dashboard/AssignRiders";
 
 export const Router = createBrowserRouter([
     {
@@ -28,7 +32,8 @@ export const Router = createBrowserRouter([
                 path: "/rider",
                 element: <PrivateRoute>
                     <Rider />
-                </PrivateRoute>
+                </PrivateRoute>,
+                loader: () => fetch('/json/warehouses.json')
 
             },
             {
@@ -67,6 +72,10 @@ export const Router = createBrowserRouter([
         </PrivateRoute>,
         children: [
             {
+                path: '',
+                element: <MyParcels />
+            },
+            {
                 path: '/dashboard/my-parcels',
                 element: <MyParcels />
             },
@@ -85,6 +94,21 @@ export const Router = createBrowserRouter([
             {
                 path: '/dashboard/payment-history',
                 element: <PaymentHistory />
+            },
+            {
+                path: '/dashboard/approve-riders',
+                element:
+                    <AdminRoute>
+                        <ApproveRiders />
+                    </AdminRoute>
+            },
+            {
+                path: '/dashboard/users-management',
+                element: <AdminRoute><UsersManagement /></AdminRoute>
+            },
+            {
+                path: '/dashboard/assign-riders',
+                element: <AdminRoute><AssignRiders /></AdminRoute>
             },
         ]
     }

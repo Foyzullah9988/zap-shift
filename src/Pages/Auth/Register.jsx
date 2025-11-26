@@ -4,12 +4,15 @@ import { AuthContext } from '../../Context/AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router';
 import Google from './Google';
 import axios from 'axios';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { registerUser,updateUserProfile } = use(AuthContext);
+    const { registerUser, updateUserProfile } = use(AuthContext);
     const location = useLocation();
     const navigate = useNavigate();
+    const axiosSecure = useAxiosSecure()
+
 
 
     const handleRegister = (data) => {
@@ -17,34 +20,48 @@ const Register = () => {
         console.log(data);
 
         registerUser(data.email, data.password)
-            .then(result => {
-                const user = result.user;
-                console.log(user);
+            .then(() => {
+                // const user = result.user;
+                // console.log(user);
 
                 // store the image to imgbb server
                 const formData = new FormData();
                 formData.append('image', userImg)
 
                 // send to imgbb server and get the url
-                axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imgbb}`,formData)
-                .then(res=>{
-                    console.log('after img upload',res.data.data.url);
+                axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imgbb}`, formData)
+                    .then(res => {
+                        console.log('after img upload', res.data.data.url);
+                        const photoURL = res.data.data.url
 
-                    // update the profile to firebase
-                    const userProfile = {
-                        displayName: data.name,
-                        photoURL: res.data.data.url
-                    }
+                        // create user in database
+                        const userInfo = {
+                            email: data.email,
+                            displayName: data.name,
+                            photoURL: photoURL
+                        }
+                        axiosSecure.post('/users', userInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    console.log('user created in database');
+                                }
+                            })
 
-                    updateUserProfile(userProfile)
-                    .then(()=>{
-                        console.log('user profile updated');
-                        navigate(location?.state?.from?.pathname || '/', { replace: true });
+                        // update the profile to firebase
+                        const userProfile = {
+                            displayName: data.name,
+                            photoURL: photoURL
+                        }
+
+                        updateUserProfile(userProfile)
+                            .then(() => {
+                                console.log('user profile updated');
+                                navigate(location?.state?.from?.pathname || '/', { replace: true });
+                            })
+                            .catch(error => {
+                                console.log(error.message);
+                            })
                     })
-                    .catch(error=>{
-                        console.log(error.message);
-                    })
-                })
 
             })
             .catch(error => {
@@ -101,8 +118,8 @@ const Register = () => {
                     <button className="btn btn-neutral mt-4">Register</button>
                 </fieldset>
                 <p>Already have an account? <Link to={"/auth/login"}
-                state={location.state}
-                className='text-blue-500'>Login</Link></p>
+                    state={location.state}
+                    className='text-blue-500'>Login</Link></p>
             </form>
             <Google />
         </div>
