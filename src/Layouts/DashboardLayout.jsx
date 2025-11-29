@@ -7,6 +7,7 @@ import { PiCreditCardDuotone, PiPersonSimpleBike, PiPersonSimpleBikeBold } from 
 import { FaUsers } from 'react-icons/fa';
 import useRole from '../Hooks/useRole';
 import { MdElectricBike } from 'react-icons/md';
+import { BiTask } from 'react-icons/bi';
 
 const DashboardLayout = () => {
     const { role } = useRole();
@@ -58,6 +59,18 @@ const DashboardLayout = () => {
                                     <span className="is-drawer-close:hidden">Payment History</span>
                                 </NavLink>
                             </li>
+
+                            {
+                                role === 'rider' &&
+                                <li>
+                                    <NavLink to={'/dashboard/assigned-deliveries'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Assigned Deliveries">
+                                        <div className="mt-1.5 inline-block size-4">
+                                            <BiTask />
+                                        </div>
+                                        <span className="is-drawer-close:hidden">Assigned Deliveries</span>
+                                    </NavLink>
+                                </li>
+                            }
 
                             {
                                 role === 'admin'

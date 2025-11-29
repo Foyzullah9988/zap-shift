@@ -5,14 +5,14 @@ import Forbidden from '../Components/Forbidden';
 import Loading from '../Components/Loading';
 
 
-const AdminRoute = ({children}) => {
-    const {loading}=use(AuthContext);
-    const {role,roleLoading} =useRole();
+const AdminRoute = ({ children }) => {
+    const { loading, user } = use(AuthContext);
+    const { role, roleLoading } = useRole();
 
-    if(loading || roleLoading)return <Loading/>;
-    if(role!=='admin')return <Forbidden/>;
+    if (loading || !user || roleLoading) return <Loading />;
+    if (role !== 'admin') return <Forbidden />;
 
-    return  children;
+    return children;
 
 };
 

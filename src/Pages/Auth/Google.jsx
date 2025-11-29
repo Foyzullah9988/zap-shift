@@ -1,13 +1,16 @@
 import React, { use } from 'react';
 import { AuthContext } from '../../Context/AuthProvider';
 import { useLocation, useNavigate } from 'react-router';
-import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import useAxiosPublic from '../../Hooks/useAxiosPublic';
+// import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const Google = () => {
-const axiosSecure = useAxiosSecure();
+// const axiosSecure = useAxiosSecure();
+const axiosPublic = useAxiosPublic();
     const { signinGoogle } = use(AuthContext)
 
     const location = useLocation();
+    
     const navigate = useNavigate();
 
     const handleGoogleSignin = () => {
@@ -17,13 +20,14 @@ const axiosSecure = useAxiosSecure();
                 // console.log(user);
                 navigate(location?.state?.from?.pathname || '/', { replace: true });
 
+                console.log(result);
                 // create user in database
                 const userInfo = {
                     email: user.email,
                     displayName: user.displayName,
                     photoURL: user.photoURL
                 }
-                axiosSecure.post('/users', userInfo)
+                axiosPublic.post('/users', userInfo)
                     .then(res => {
                         if (res.data.insertedId) {
                             console.log('user created in database google');

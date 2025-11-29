@@ -56,7 +56,7 @@ const AssignRiders = () => {
             })
     }
 
-
+console.log(riders);
 
 
 
